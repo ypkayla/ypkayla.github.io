@@ -24,7 +24,7 @@ export async function initPyodide(): Promise<PyodideInterface> {
 
   // Start loading Pyodide
   loadingPromise = loadPyodide({
-    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full/',
+    indexURL: 'https://cdn.jsdelivr.net/pyodide/v0.26.4/full',
   }).then((pyodide) => {
     pyodideInstance = pyodide;
     return pyodide;
