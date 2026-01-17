@@ -6,7 +6,7 @@ import { CodeEditor } from '@/components/editor/CodeEditor';
 import { OutputConsole } from '@/components/editor/OutputConsole';
 import { RunButton } from '@/components/editor/RunButton';
 import { LessonContent } from '@/components/lessons/LessonContent';
-import { Exercise, createExerciseChecker } from '@/components/lessons/Exercise';
+import { Exercise } from '@/components/lessons/Exercise';
 import { Navigation } from '@/components/lessons/Navigation';
 import { getLesson, getAdjacentLessons } from '@/data/courses';
 import { 
@@ -83,26 +83,6 @@ export function LessonPageClient({
     toast.success('Code reset to starter template');
   };
 
-  const handleCheckExercise = async (solutionCode: string) => {
-    if (!lesson.exercise) return;
-
-    const checker = createExerciseChecker({
-      title: lesson.exercise.title,
-      description: lesson.exercise.description,
-      tests: lesson.exercise.tests,
-    });
-
-    const passed = await checker(solutionCode);
-
-    if (passed && !isComplete) {
-      markLessonComplete(lessonId, lesson.xp);
-      setIsComplete(true);
-      toast.success(`🎉 Lesson complete! +${lesson.xp} XP`);
-    } else if (!passed) {
-      toast.error('Some tests failed. Keep trying!');
-    }
-  };
-
   return (
     <div className="h-[calc(100vh-4rem)] flex flex-col">
       {/* Lesson Header */}
@@ -148,11 +128,11 @@ export function LessonPageClient({
                   description={lesson.exercise.description}
                   tests={lesson.exercise.tests}
                   code={code}
-                  onCheck={handleCheckExercise}
                   onComplete={() => {
                     if (!isComplete) {
                       markLessonComplete(lessonId, lesson.xp);
                       setIsComplete(true);
+                      toast.success(`🎉 Lesson complete! +${lesson.xp} XP`);
                     }
                   }}
                 />

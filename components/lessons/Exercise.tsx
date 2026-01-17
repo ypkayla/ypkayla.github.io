@@ -18,15 +18,18 @@ interface ExerciseProps {
   tests: ExerciseTest[];
   onComplete?: () => void;
   code?: string;
-  onCheck?: (code: string) => Promise<void>;
 }
 
-export function Exercise({ title, description, tests, onComplete, code, onCheck }: ExerciseProps) {
+export function Exercise({ title, description, tests, onComplete, code }: ExerciseProps) {
   const [testResults, setTestResults] = useState<{ passed: boolean; message: string }[]>([]);
   const [isChecking, setIsChecking] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkSolution = async (solutionCode: string) => {
+    if (!solutionCode.trim()) {
+      toast.error('Please write some code first!');
+      return;
+    }
+
     setIsChecking(true);
     const results: { passed: boolean; message: string }[] = [];
 
@@ -38,7 +41,7 @@ export function Exercise({ title, description, tests, onComplete, code, onCheck 
         if (test.testCode) {
           // Run custom test code
           const testScript = `
-${code}
+${solutionCode}
 
 ${test.testCode}
           `;
@@ -57,7 +60,7 @@ ${test.testCode}
           }
         } else if (test.expectedOutput) {
           // Simple output comparison
-          const result = await runPythonCode(code);
+          const result = await runPythonCode(solutionCode);
           
           if (result.error) {
             testPassed = false;
@@ -125,11 +128,11 @@ ${test.testCode}
         </div>
       )}
 
-      {code !== undefined && onCheck && (
+      {code !== undefined && (
         <div className="mt-4">
           <button
-            onClick={() => onCheck(code)}
-            disabled={isChecking}
+            onClick={() => checkSolution(code)}
+            disabled={isChecking || !code.trim()}
             className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white font-medium transition-colors"
           >
             {isChecking ? 'Checking...' : 'Check Solution'}
