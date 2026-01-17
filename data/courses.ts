@@ -11,6 +11,8 @@ export interface Lesson {
     tests: Array<{
       input?: string;
       expectedOutput?: string;
+      minOutputLength?: number;
+      minOutputLines?: number;
       description: string;
       testCode?: string;
     }>;
