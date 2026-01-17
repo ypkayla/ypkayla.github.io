@@ -17,15 +17,15 @@ interface ExerciseProps {
   description: string;
   tests: ExerciseTest[];
   onComplete?: () => void;
+  code?: string;
+  onCheck?: (code: string) => Promise<void>;
 }
 
-export function Exercise({ title, description, tests, onComplete }: ExerciseProps) {
+export function Exercise({ title, description, tests, onComplete, code, onCheck }: ExerciseProps) {
   const [testResults, setTestResults] = useState<{ passed: boolean; message: string }[]>([]);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [isChecking, setIsChecking] = useState(false);
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const checkSolution = async (code: string) => {
+  const checkSolution = async (solutionCode: string) => {
     setIsChecking(true);
     const results: { passed: boolean; message: string }[] = [];
 
@@ -121,6 +121,18 @@ ${test.testCode}
               </span>
             </div>
           ))}
+        </div>
+      )}
+
+      {code !== undefined && onCheck && (
+        <div className="mt-4">
+          <button
+            onClick={() => onCheck(code)}
+            disabled={isChecking}
+            className="px-4 py-2 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-700 hover:to-blue-700 disabled:opacity-50 disabled:cursor-not-allowed rounded-md text-white font-medium transition-colors"
+          >
+            {isChecking ? 'Checking...' : 'Check Solution'}
+          </button>
         </div>
       )}
     </div>

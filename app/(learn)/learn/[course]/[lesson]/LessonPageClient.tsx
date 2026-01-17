@@ -84,7 +84,7 @@ export function LessonPageClient({
     toast.success('Code reset to starter template');
   };
 
-  const handleCheckExercise = async () => {
+  const handleCheckExercise = async (solutionCode: string) => {
     if (!lesson.exercise) return;
 
     const checker = createExerciseChecker({
@@ -93,12 +93,14 @@ export function LessonPageClient({
       tests: lesson.exercise.tests,
     });
 
-    const passed = await checker(code);
+    const passed = await checker(solutionCode);
 
     if (passed && !isComplete) {
       markLessonComplete(lessonId, lesson.xp);
       setIsComplete(true);
       toast.success(`🎉 Lesson complete! +${lesson.xp} XP`);
+    } else if (!passed) {
+      toast.error('Some tests failed. Keep trying!');
     }
   };
 
@@ -146,6 +148,8 @@ export function LessonPageClient({
                   title={lesson.exercise.title}
                   description={lesson.exercise.description}
                   tests={lesson.exercise.tests}
+                  code={code}
+                  onCheck={handleCheckExercise}
                   onComplete={() => {
                     if (!isComplete) {
                       markLessonComplete(lessonId, lesson.xp);
@@ -153,12 +157,6 @@ export function LessonPageClient({
                     }
                   }}
                 />
-                <Button
-                  onClick={handleCheckExercise}
-                  className="mt-4 bg-blue-600 hover:bg-blue-700"
-                >
-                  Check Solution
-                </Button>
               </div>
             )}
           </div>
