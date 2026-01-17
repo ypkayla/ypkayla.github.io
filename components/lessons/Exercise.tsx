@@ -8,6 +8,8 @@ import toast from 'react-hot-toast';
 export interface ExerciseTest {
   input?: string;
   expectedOutput?: string;
+  minOutputLength?: number;
+  minOutputLines?: number;
   description: string;
   testCode?: string;
 }
@@ -38,7 +40,33 @@ export function Exercise({ title, description, tests, onComplete, code }: Exerci
         let testPassed = false;
         let message = '';
 
-        if (test.testCode) {
+        if (test.minOutputLength !== undefined) {
+          const result = await runPythonCode(solutionCode);
+
+          if (result.error) {
+            testPassed = false;
+            message = `Error: ${result.error}`;
+          } else {
+            const outputLength = result.output.trim().length;
+            testPassed = outputLength >= test.minOutputLength;
+            message = testPassed
+              ? test.description
+              : `Expected output length >= ${test.minOutputLength}, got ${outputLength}`;
+          }
+        } else if (test.minOutputLines !== undefined) {
+          const result = await runPythonCode(solutionCode);
+
+          if (result.error) {
+            testPassed = false;
+            message = `Error: ${result.error}`;
+          } else {
+            const lines = result.output.split('\n').filter(line => line.trim().length > 0);
+            testPassed = lines.length >= test.minOutputLines;
+            message = testPassed
+              ? test.description
+              : `Expected at least ${test.minOutputLines} lines, got ${lines.length}`;
+          }
+        } else if (test.testCode) {
           // Run custom test code
           const testScript = `
 ${solutionCode}

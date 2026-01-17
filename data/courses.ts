@@ -88,23 +88,7 @@ print("Line 3")
           tests: [
             {
               description: 'Program should print something',
-              testCode: `
-import sys
-from io import StringIO
-old_stdout = sys.stdout
-sys.stdout = StringIO()
-
-# Run the user's code
-exec(compile(open('__main__').read(), '__main__', 'exec'))
-
-output = sys.stdout.getvalue()
-sys.stdout = old_stdout
-
-if len(output.strip()) > 0:
-    print("PASS")
-else:
-    print("FAIL: No output detected")
-              `
+              minOutputLength: 1
             }
           ]
         }
@@ -220,24 +204,7 @@ print("Favorite number:", favorite_number)`,
           tests: [
             {
               description: 'Should create and print at least 3 variables',
-              testCode: `
-import sys
-from io import StringIO
-old_stdout = sys.stdout
-sys.stdout = StringIO()
-
-exec(compile(open('__main__').read(), '__main__', 'exec'))
-
-output = sys.stdout.getvalue()
-sys.stdout = old_stdout
-
-# Check if there are at least 3 lines of output
-lines = [line for line in output.split('\\n') if line.strip()]
-if len(lines) >= 3:
-    print("PASS")
-else:
-    print(f"FAIL: Expected at least 3 outputs, got {len(lines)}")
-              `
+              minOutputLines: 3
             }
           ]
         }
