@@ -1,7 +1,7 @@
 // Using Skulpt for Python execution in browser
 declare global {
   interface Window {
-    Sk: any;
+    Sk: unknown;
   }
 }
 
@@ -63,26 +63,30 @@ export async function runPythonCode(code: string): Promise<{
     let error: string | null = null;
 
     // Configure Skulpt
-    window.Sk.configure({
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const Sk = window.Sk as any;
+    Sk.configure({
       output: (text: string) => {
         output += text;
       },
       read: (filename: string) => {
-        if (window.Sk.builtinFiles === undefined || window.Sk.builtinFiles['files'][filename] === undefined) {
+        if (Sk.builtinFiles === undefined || Sk.builtinFiles['files'][filename] === undefined) {
           throw new Error(`File not found: '${filename}'`);
         }
-        return window.Sk.builtinFiles['files'][filename];
+        return Sk.builtinFiles['files'][filename];
       },
-      __future__: window.Sk.python3,
+      __future__: Sk.python3,
     });
 
     try {
       // Run the Python code
-      await window.Sk.misceval.asyncToPromise(() => {
-        return window.Sk.importMainWithBody('<stdin>', false, code, true);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      await (window.Sk as any).misceval.asyncToPromise(() => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        return (window.Sk as any).importMainWithBody('<stdin>', false, code, true);
       });
-    } catch (err: any) {
-      error = err.toString();
+    } catch (err: unknown) {
+      error = (err as Error).toString();
     }
 
     const executionTime = performance.now() - startTime;
@@ -92,11 +96,11 @@ export async function runPythonCode(code: string): Promise<{
       error,
       executionTime,
     };
-  } catch (err: any) {
+  } catch (err: unknown) {
     const executionTime = performance.now() - startTime;
     return {
       output: '',
-      error: err.message || 'Failed to execute Python code',
+      error: (err as Error).message || 'Failed to execute Python code',
       executionTime,
     };
   }
@@ -121,12 +125,13 @@ export async function validatePythonSyntax(code: string): Promise<{
     
     // Try to parse the code
     try {
-      window.Sk.parse('<stdin>', code);
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      (window.Sk as any).parse('<stdin>', code);
       return { valid: true, error: null };
-    } catch (err: any) {
-      return { valid: false, error: err.toString() };
+    } catch (err: unknown) {
+      return { valid: false, error: (err as Error).toString() };
     }
-  } catch (err: any) {
-    return { valid: false, error: err.message };
+  } catch (err: unknown) {
+    return { valid: false, error: (err as Error).message };
   }
 }

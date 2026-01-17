@@ -16,7 +16,6 @@ import {
   setCurrentLesson,
   isLessonComplete 
 } from '@/lib/storage';
-import { Button } from '@/components/ui/button';
 import { CheckCircle2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { notFound } from 'next/navigation';

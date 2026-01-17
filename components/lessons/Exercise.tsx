@@ -25,6 +25,7 @@ export function Exercise({ title, description, tests, onComplete, code, onCheck 
   const [testResults, setTestResults] = useState<{ passed: boolean; message: string }[]>([]);
   const [isChecking, setIsChecking] = useState(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const checkSolution = async (solutionCode: string) => {
     setIsChecking(true);
     const results: { passed: boolean; message: string }[] = [];
