@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
-import { runPythonCode } from '@/lib/pyodide';
+import { runPythonCode } from '@/lib/pythonRunner';
 import toast from 'react-hot-toast';
 
 export interface ExerciseTest {

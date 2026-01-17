@@ -66,7 +66,7 @@ export default function HomePage() {
               Real-Time Execution
             </h3>
             <p className="text-zinc-400">
-              See your code run instantly with our in-browser Python interpreter powered by Pyodide. 
+              See your code run instantly with our in-browser Python interpreter powered by Skulpt.
               Get immediate feedback on every line you write.
             </p>
           </div>
@@ -146,7 +146,7 @@ export default function HomePage() {
       {/* Footer */}
       <footer className="border-t border-zinc-800 py-12">
         <div className="container mx-auto px-4 text-center text-zinc-500">
-          <p>© 2024 Learn Python. Built with Next.js, Pyodide, and ❤️</p>
+          <p>© 2024 Learn Python. Built with Next.js, Skulpt, and ❤️</p>
         </div>
       </footer>
     </div>

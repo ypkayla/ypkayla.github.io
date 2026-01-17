@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { Play, Loader2, RotateCcw } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { runPythonCode } from '@/lib/pyodide';
+import { runPythonCode } from '@/lib/pythonRunner';
 import toast from 'react-hot-toast';
 
 interface RunButtonProps {
